@@ -7,31 +7,21 @@ Outputs:
     Description: "ARN of the UploadFiletoS3 Lambda function"
     Value: !GetAtt UploadFiletoS3Function.Arn
 
+Parameters:
+  BucketName:
+    Type: String
+    Default: "myBucket"
 
 Resources:
   UploadFiletoS3Function:
     Type: AWS::Serverless::Function
     Properties:
       Description: An Application Load Balancer Lambda Target that upload files to S3
-      Handler: uploadfile_27.lambda_handler
-      Runtime: python2.7
+      Handler: uploadfile_39.lambda_handler
+      # https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/lambda-runtimes.html
+      Runtime: python3.9
       CodeUri: ./
       Timeout: 300
-      Role: !GetAtt UploadFiletoS3FunctionRole.Arn
-    DependsOn:
-    - UploadFiletoS3FunctionRole
-
-  UploadFiletoS3FunctionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
-          Action:
-          - sts:AssumeRole
-      ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref BucketName

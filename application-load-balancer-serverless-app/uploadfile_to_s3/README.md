@@ -8,7 +8,7 @@ You need to use query string parameter to specify the S3 bucket , S3 Object Key 
 For example, to upload an image file -- logo.png as test.png to the S3 bucket -- myBucket:
 
 ```
-curl -ivv -X POST -H "Content-Type: image/png" -F "data=@logo.png" "http(s)://<<ALB FQDN and path to your Lambda target>>?objectname=test.png&bucketname=myBucket"
+curl -ivv -X POST -H "Content-Type: image/png" --data-binary "@logo.png" "http(s)://<<ALB FQDN and path to your Lambda target>>?objectname=sample/test.png&bucketname=myBucket"
 ```
 
 
@@ -17,8 +17,8 @@ curl -ivv -X POST -H "Content-Type: image/png" -F "data=@logo.png" "http(s)://<<
 [More demo of Lambda as target on Application Load Balancer](https://exampleloadbalancer.com/lambda_demo.html)
 ## TO DEPLOY
 ```
-aws cloudformation package --template-file template.yaml --output-template-file serverless-output.yaml --s3-bucket <<<YOUR BUCKET NAME>>>
-aws cloudformation deploy --template-file serverless-output.yaml --stack-name <<<YOUR STACK NAME>>> --capabilities CAPABILITY_IAM
+sam build
+sam deploy --template-file template.yaml --stack-name <<<YOUR STACK NAME>>> --s3-bucket <<<YOUR BUCKET NAME>>> --capabilities CAPABILITY_IAM
 ```
 
 ##Register Lambda to your Application Load Balancer
